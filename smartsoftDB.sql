@@ -1,3 +1,6 @@
+create database smartsoft_test;
+use smartsoft_test;
+
 -- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: smartsoft_test
@@ -153,7 +156,7 @@ CREATE TABLE `producto` (
 -- Dump completed on 2021-10-28 17:51:08
 
 create table hibernate_sequences(
-    sequence_name VARCHAR NOT NULL,
+    sequence_name VARCHAR(255) NOT NULL,
     next_val INTEGER NOT NULL
 );
 
