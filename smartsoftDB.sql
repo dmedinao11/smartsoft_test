@@ -157,4 +157,4 @@ create table hibernate_sequences(
     next_val INTEGER NOT NULL
 );
 
-INSERT INTO `smartsoft_test`.hibernate_sequence (next_val) VALUES (0);
+INSERT INTO `smartsoft_test`.hibernate_sequence (next_val) VALUES (1);
