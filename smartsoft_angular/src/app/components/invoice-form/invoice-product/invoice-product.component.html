@@ -1,0 +1,77 @@
+<mat-card
+  class="mat-elevation-z5 my-2"
+  [formGroup]="productForm"
+  *ngIf="productForm"
+>
+  <div class="row">
+    <div class="col">
+      <mat-form-field appearance="fill" class="my-2">
+        <mat-label>Product</mat-label>
+        <input
+          type="text"
+          matInput
+          [matAutocomplete]="auto"
+          formControlName="productId"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="displayProducts"
+        >
+          <mat-option
+            *ngFor="let product of filteredProducts | async"
+            [value]="product.id"
+          >
+            {{ product.name }}
+          </mat-option>
+        </mat-autocomplete>
+
+        <mat-error *ngIf="productForm.controls.productId.hasError('required')">
+          Product is <strong>required</strong>
+        </mat-error>
+
+        <mat-error *ngIf="productForm.controls.productId.hasError('min')">
+          Product is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col">
+      <h3>Stock</h3>
+      <p *ngIf="selectedProduct">{{ selectedProduct.stock }}</p>
+    </div>
+
+    <div class="col">
+      <mat-form-field appearance="fill" class="my-2">
+        <mat-label>Quantity</mat-label>
+        <input
+          type="number"
+          matInput
+          step="1"
+          min="0"
+          [max]="selectedProduct?.stock || 1"
+          formControlName="quantity"
+        />
+        <mat-error *ngIf="productForm.controls.quantity.hasError('required')">
+          Quantity is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="productForm.controls.quantity.hasError('max')">
+          Stock no available
+        </mat-error>
+        <mat-error *ngIf="productForm.controls.quantity.hasError('min')">
+          Take almost one
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col">
+      <h3>Price</h3>
+      <p>{{ totalPrice | currency: "USD":"symbol":"0.2-2" }}</p>
+    </div>
+
+    <div class="col-1">
+      <button mat-button color="accent" type="button" (click)="deleteThis()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-card>

@@ -20,4 +20,6 @@ public class DetailKey implements Serializable {
 
     @Column(name = "id_producto")
     private Long productId;
+
+
 }

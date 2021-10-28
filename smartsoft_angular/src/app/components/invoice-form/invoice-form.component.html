@@ -1,0 +1,74 @@
+<div class="m-3">
+  <mat-card class="mat-elevation-z5">
+    <mat-card-title>Invoice Form</mat-card-title>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!isLoading">
+      <mat-card-content>
+        <mat-form-field appearance="fill" class="my-2">
+          <mat-label>Client</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="clientId"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            [displayWith]="displayClients"
+          >
+            <mat-option
+              *ngFor="let client of filteredClients | async"
+              [value]="client.id"
+            >
+              {{ client.name }}&nbsp;{{ client.lastName }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="form.controls.clientId.hasError('required')">
+            Client is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="form.controls.clientId.hasError('min')">
+            Client is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <div class="my-2">
+          <ng-container
+            *ngFor="let item of productsForm.controls; let i = index"
+          >
+            <app-invoice-product
+              [formIndex]="i"
+              [products]="productsList"
+              (delete)="deleteProductForm($event)"
+            ></app-invoice-product>
+          </ng-container>
+        </div>
+
+        <div class="d-flex flex-row justify-content-center my-2">
+          <button
+            mat-button
+            color="accent"
+            type="button"
+            (click)="addProductForm()"
+          >
+            <mat-icon>plus_one</mat-icon>
+            Add product
+          </button>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <div class="d-flex flex-row justify-content-end">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isLoading"
+          >
+            Send
+          </button>
+        </div>
+      </mat-card-actions>
+    </form>
+    <mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+  </mat-card>
+</div>

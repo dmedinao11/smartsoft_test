@@ -15,8 +15,7 @@ import javax.persistence.*;
 @Table(name = "DETALLE")
 @Builder
 public class Detail {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numDetail;
+    private String numDetail;
 
     @EmbeddedId
     DetailKey id;

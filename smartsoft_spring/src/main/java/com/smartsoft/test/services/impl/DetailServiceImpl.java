@@ -3,10 +3,12 @@ package com.smartsoft.test.services.impl;
 import com.smartsoft.test.models.Client;
 import com.smartsoft.test.models.Detail;
 import com.smartsoft.test.models.Invoice;
+import com.smartsoft.test.models.Product;
 import com.smartsoft.test.models.dtos.InvoiceDTO;
 import com.smartsoft.test.models.dtos.InvoiceProductDTO;
 import com.smartsoft.test.models.dtos.ProductDTO;
 import com.smartsoft.test.models.util.DetailKey;
+import com.smartsoft.test.repositories.ClientRepository;
 import com.smartsoft.test.repositories.DetailRepository;
 import com.smartsoft.test.services.DetailService;
 import com.smartsoft.test.services.InvoiceService;
@@ -14,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ public class DetailServiceImpl implements DetailService {
 
     private final InvoiceService invoiceService;
     private final DetailRepository detailRepository;
+    private final ClientRepository clientRepository;
 
     @Override
     public InvoiceDTO saveInvoiceWithAllInfo(InvoiceDTO invoiceDTO) {
@@ -34,8 +38,8 @@ public class DetailServiceImpl implements DetailService {
     }
 
     private Invoice saveInvoice(InvoiceDTO invoiceDTO) {
-        Client client = Client.builder().id(invoiceDTO.getClientId()).build();
-        Invoice newInvoice = Invoice.builder().client(client).build();
+        Client client = clientRepository.findById(invoiceDTO.getClientId()).orElse(null);
+        Invoice newInvoice = Invoice.builder().client(client).date(new Date()).build();
         return invoiceService.saveInvoice(newInvoice);
     }
 
@@ -48,6 +52,9 @@ public class DetailServiceImpl implements DetailService {
                             .productId(productInInvoice.getProductId())
                             .build();
                     return Detail.builder().id(detailCompositeKey)
+                            .invoice(invoice)
+                            .numDetail(productInInvoice.getProductId().toString().concat("x").concat(invoice.getId().toString()))
+                            .product(Product.builder().id(productInInvoice.getProductId()).build())
                             .quantity(productInInvoice.getQuantity())
                             .build();
                 })
